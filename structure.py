@@ -65,7 +65,7 @@ class BaseAIPlayer(Player):
     def __init__(self, board: GomokuBoard):
         self.board = board
 
-    def get_move(self) -> int:
+    def get_move(self) -> tuple[int, int]:
         raise NotImplementedError
 
 
