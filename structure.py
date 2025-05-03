@@ -36,11 +36,11 @@ class GomokuBoard:
         self.n_moves = 0
 
     def heuristic(self) -> int:
-        # to be implemented -> George
+        # to be implemented
         pass
 
     def get_state(self) -> str:
-        # to be implemented -> George
+        # to be implemented
         pass
 
 
