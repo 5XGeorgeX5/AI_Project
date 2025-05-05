@@ -1,5 +1,5 @@
 class GomokuPlayer(Player):
-    def get_move() -> tuple[int, int]:
+    def get_move(self) -> tuple[int, int]:
         while True:
             try:
                 move_input = input("Enter your move two numbers separated by space (row col, 0-14): ").strip()
@@ -7,6 +7,6 @@ class GomokuPlayer(Player):
                 if 0 <= i < 15 and 0 <= j < 15:
                     return (i, j)
                 else:
-                    print("Invalid input: numbers must be between 1 and 15")
+                    print("Invalid input: numbers must be between 0 and 14")
             except ValueError:
                 print("Invalid input: please enter two numbers separated by space")
