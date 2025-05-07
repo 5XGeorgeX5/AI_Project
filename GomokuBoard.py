@@ -627,17 +627,13 @@ class GomokuBoard:
         xScore = 0
         oScore = 0
         for winning_position in self.__winning_positions:
-            total =0
+            total = 0
             for cell in winning_position:
                 total += ord(self.board[cell])
             if total % ord("X") == 0:
-                count = total/ ord("X")
-                xScore += count* count *count
-            elif total % ord("O") ==0:
-                count = total/ ord("O")
-                oScore += count* count *count
-        return xScore - oScore                
-                
-
-                
-        
+                count = total / ord("X")
+                xScore += count * count * count
+            elif total % ord("O") == 0:
+                count = total / ord("O")
+                oScore += count * count * count
+        return xScore - oScore
