@@ -1,6 +1,7 @@
 from GomokuBoard import GomokuBoard
 from GomokuPlayer import GomokuPlayer
 from structure import Player
+from MinimaxAIPlayer import MiniMaxAIPlayer
 
 
 class GameEngine:
@@ -39,7 +40,7 @@ class GameEngine:
 
 board = GomokuBoard()
 player1 = GomokuPlayer()
-player2 = GomokuPlayer()
+player2 = MiniMaxAIPlayer(board)
 
 engine = GameEngine(player1, player2, board)
 engine.run()
