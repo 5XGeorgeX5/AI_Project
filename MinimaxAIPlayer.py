@@ -3,7 +3,6 @@ from GomokuBoard import GomokuBoard
 
 
 class MiniMaxAIPlayer(BaseAIPlayer):
-    __corners = None
     __depth = 2
 
     def __init__(self, board: GomokuBoard):
@@ -16,6 +15,8 @@ class MiniMaxAIPlayer(BaseAIPlayer):
             return 0
         elif depth == 0:
             return self.board.heuristic()
+        
+        coorners =  self.board.get_corneres()
 
         if maximizingPlayer:
             maxEval = -500000000

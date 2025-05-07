@@ -575,10 +575,13 @@ class GomokuBoard:
         [164, 178, 192, 206, 220],
     ]
     # endregion
+    
+    
 
     def __init__(self):
         self.board = ["\0"] * 225
         self.n_moves = 0
+        self.corners = [50000,-50000]
 
     def is_winner(self) -> bool:
         for winning_position in self.__winning_positions:
@@ -603,6 +606,8 @@ class GomokuBoard:
         if 0 <= i < 225 and self.board[i] == "\0":
             self.board[i] = "X" if self.n_moves % 2 == 0 else "O"
             self.n_moves += 1
+            self.corners[0] = min(self.corners[0], i)
+            self.corners[1] = max(self.corners[0], i)
             return True
         return False
 
@@ -637,3 +642,12 @@ class GomokuBoard:
                 count = total / ord("O")
                 oScore += count * count * count
         return xScore - oScore
+    
+    def set_corners(self, corners : list[int , int]):
+        self.corners[0] = corners[0]
+        self.corners[1] = corners[1]
+
+    def get_corneres(self) -> list[int, int]:
+        return self.corners.copy()
+
+    

@@ -1,7 +1,7 @@
 from GomokuBoard import GomokuBoard
 from GomokuPlayer import GomokuPlayer
 from structure import Player
-from MyMinimaxAIPlayer import MiniMaxAIPlayer
+from MinimaxAIPlayer import MiniMaxAIPlayer
 
 
 class GameEngine:
