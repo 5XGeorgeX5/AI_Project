@@ -1,14 +1,13 @@
 from structure import BaseAIPlayer
 from GomokuBoard import GomokuBoard
 
-
-class MiniMaxAIPlayer(BaseAIPlayer):
+class AlphaBetaAIPlayer(BaseAIPlayer):
     __depth = 2
 
     def __init__(self, board: GomokuBoard):
         super().__init__(board)
 
-    def minimax(self, maximizingPlayer: bool, depth: int) -> int:
+    def minimax(self, maximizingPlayer: bool, depth: int, alpha : int , beta: int) -> int:
         if self.board.is_winner():
             if maximizingPlayer :
                 return -500000 + self.board.moves()
@@ -46,10 +45,13 @@ class MiniMaxAIPlayer(BaseAIPlayer):
             while i< end:
                 for j in range(i , i+ length):
                     if self.board.update_board(j):
-                        eval = self.minimax(False, depth - 1)
+                        eval = self.minimax(False, depth - 1, alpha , beta)
                         maxEval = max(maxEval, eval)
                         self.board.reset(j)
                         self.board.set_corners(corners)
+                        alpha = max(alpha , eval)
+                        if beta <= alpha:
+                            break
                 i+= 15        
             return maxEval
         else:
@@ -57,10 +59,13 @@ class MiniMaxAIPlayer(BaseAIPlayer):
             while i< end:
                 for j in range(i , i+ length):
                     if self.board.update_board(j):
-                        eval = self.minimax(True, depth - 1)
+                        eval = self.minimax(True, depth - 1, alpha, beta)
                         minEval = min(minEval, eval)
                         self.board.reset(j)
                         self.board.set_corners(corners)
+                        beta = min(beta, eval)
+                        if beta <= alpha:
+                            break
                 i+=15        
             return minEval
 
@@ -68,8 +73,10 @@ class MiniMaxAIPlayer(BaseAIPlayer):
         maximizingPlayer = (self.board.moves() % 2) == 0
         if(self.board.moves() == 0):
             return (7-1)* 15 + (7-1)
-        
         index = -1
+        alpha = -500000000
+        beta = 500000000
+
         corners =  self.board.get_corneres()
         row = corners[0]
         colm = corners[1]
@@ -96,11 +103,11 @@ class MiniMaxAIPlayer(BaseAIPlayer):
             while i< end:
                 for j in range(i , i+ length):
                     if self.board.update_board(j):
-                        value = self.minimax(False, self.__depth - 1)
+                        value = self.minimax(False, self.__depth - 1, alpha , beta)
                         if value > maxEval:
                             index = j
                             maxEval = value
-
+                        alpha = max(alpha , value)
                         self.board.reset(j)
                         self.board.set_corners(corners)
                 i+=15        
@@ -109,11 +116,11 @@ class MiniMaxAIPlayer(BaseAIPlayer):
             while i< end:
                 for j in range(i , i+ length):
                     if self.board.update_board(j):
-                        value = self.minimax(True, self.__depth - 1)
+                        value = self.minimax(True, self.__depth - 1, alpha , beta)
                         if value < minEval:
                             index = j
                             minEval = value
-
+                        beta = min(beta , value)
                         self.board.reset(j)
                         self.board.set_corners(corners)
                 i+=15     

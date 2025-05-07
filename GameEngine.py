@@ -2,6 +2,7 @@ from GomokuBoard import GomokuBoard
 from GomokuPlayer import GomokuPlayer
 from structure import Player
 from MinimaxAIPlayer import MiniMaxAIPlayer
+from AlphaBetaAIPlayer import AlphaBetaAIPlayer
 
 
 class GameEngine:
@@ -39,7 +40,7 @@ class GameEngine:
 
 
 board = GomokuBoard()
-player1 = GomokuPlayer()
+player1 = AlphaBetaAIPlayer(board)
 player2 = MiniMaxAIPlayer(board)
 
 engine = GameEngine(player1, player2, board)

@@ -90,7 +90,7 @@ class MiniMaxAIPlayer(BaseAIPlayer):
         pass
 
 
-class AlphaNetaAIPlayer(BaseAIPlayer):
+class AlphaetaAIPlayer(BaseAIPlayer):
     def __init__(self, board: GomokuBoard):
         super().__init__(board)
 
