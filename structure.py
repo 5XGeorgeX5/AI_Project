@@ -50,13 +50,13 @@ class GomokuBoard:
 
 class Player:
 
-    def get_move(self) -> tuple[int, int]:
+    def get_move(self) -> int:
         raise NotImplementedError
 
 
 class GomokuPlayer(Player):
 
-    def get_move(self) -> tuple[int, int]:
+    def get_move(self) -> int:
         # to be implemented
         pass
 
@@ -65,7 +65,7 @@ class BaseAIPlayer(Player):
     def __init__(self, board: GomokuBoard):
         self.board = board
 
-    def get_move(self) -> tuple[int, int]:
+    def get_move(self) -> int:
         raise NotImplementedError
 
 
@@ -77,7 +77,7 @@ class MiniMaxAIPlayer(BaseAIPlayer):
         # to be implemented
         pass
 
-    def get_move(self) -> tuple[int, int]:
+    def get_move(self) -> int:
         # to be implemented
         pass
 
@@ -90,7 +90,7 @@ class AlphaNetaAIPlayer(BaseAIPlayer):
         # to be implemented
         pass
 
-    def get_move(self) -> tuple[int, int]:
+    def get_move(self) -> int:
         # to be implemented
         pass
 

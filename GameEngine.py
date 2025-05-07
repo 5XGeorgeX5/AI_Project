@@ -2,9 +2,10 @@ from GomokuBoard import GomokuBoard
 from GomokuPlayer import GomokuPlayer
 from structure import Player
 
+
 class GameEngine:
-    def __init__(self, player1: Player, player2: Player):
-        self.board = GomokuBoard()
+    def __init__(self, player1: Player, player2: Player, board: GomokuBoard):
+        self.board = board
         self.players = (player1, player2)
         self.current_player_idx = 0
 
@@ -16,8 +17,8 @@ class GameEngine:
 
             while True:
                 try:
-                    i, j = current_player.get_move()
-                    if self.board.update_board(i, j):
+                    i = current_player.get_move()
+                    if self.board.update_board(i):
                         break
                     else:
                         print("Invalid move: Position already taken. Try again.")
@@ -28,15 +29,17 @@ class GameEngine:
                 self.board.display_board()
                 print(f"Player {self.current_player_idx + 1} wins!")
                 return
-            
+
             self.current_player_idx = 1 - self.current_player_idx
 
         if self.board.is_draw():
             self.board.display_board()
             print("It's a draw!")
 
+
+board = GomokuBoard()
 player1 = GomokuPlayer()
 player2 = GomokuPlayer()
 
-engine = GameEngine(player1, player2)
+engine = GameEngine(player1, player2, board)
 engine.run()
