@@ -10,16 +10,9 @@ class MiniMaxAIPlayer(BaseAIPlayer):
 
     def minimax(self, maximizingPlayer: bool, depth: int) -> int:
         if self.board.is_winner():
-            print("from mini max")
-            self.board.display_board()
-            print(maximizingPlayer)
-            if maximizingPlayer :
-                print(-500000 + self.board.moves())
-                print()
+            if (self.board.moves() % 2) == 0 :
                 return -500000 + self.board.moves()
             else:
-                print(500000 - self.board.moves())
-                print()
                 return 500000 - self.board.moves()
         elif self.board.moves() == 225:
             return 0
@@ -53,7 +46,7 @@ class MiniMaxAIPlayer(BaseAIPlayer):
             while i< end:
                 for j in range(i , i+ length):
                     if self.board.update_board(j):
-                        eval = self.minimax(True, depth - 1)
+                        eval = self.minimax(False, depth - 1)
                         maxEval = max(maxEval, eval)
                         self.board.reset(j)
                         self.board.set_corners(corners)
@@ -64,7 +57,7 @@ class MiniMaxAIPlayer(BaseAIPlayer):
             while i< end:
                 for j in range(i , i+ length):
                     if self.board.update_board(j):
-                        eval = self.minimax(False, depth - 1)
+                        eval = self.minimax(True, depth - 1)
                         minEval = min(minEval, eval)
                         self.board.reset(j)
                         self.board.set_corners(corners)
@@ -102,7 +95,7 @@ class MiniMaxAIPlayer(BaseAIPlayer):
             while i< end:
                 for j in range(i , i+ length):
                     if self.board.update_board(j):
-                        value = self.minimax(True, self.__depth - 1)
+                        value = self.minimax(False, self.__depth - 1)
                         if value > maxEval:
                             index = j
                             maxEval = value
@@ -115,7 +108,7 @@ class MiniMaxAIPlayer(BaseAIPlayer):
             while i< end:
                 for j in range(i , i+ length):
                     if self.board.update_board(j):
-                        value = self.minimax(False, self.__depth - 1)
+                        value = self.minimax(True, self.__depth - 1)
                         if value < minEval:
                             index = j
                             minEval = value
