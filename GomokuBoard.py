@@ -646,7 +646,7 @@ class GomokuBoard:
                 # if(count == 3):
                 #     for i in winning_position:
                 #         print(f"({i//15} , {i % 15}) : {self.board[i]} : {ord(self.board[i])}")
-                xScore += count * count * count
+                xScore += count ** count
             elif total % ord("O") == 0:
                 count = total / ord("O")
                 # if(count == 3):
@@ -656,7 +656,7 @@ class GomokuBoard:
                     #self.display_board()
                     isfour = True
 
-                oScore += count * count * count
+                oScore += count ** count
         if isfour:
            # print(xScore - oScore)             
            # print()   
