@@ -607,7 +607,7 @@ class GomokuBoard:
         return False
 
     def reset(self, i: int) -> None:
-        if 0 <= i < 15 and self.board[i] != "\0":
+        if 0 <= i < 225 and self.board[i] != "\0":
             self.board[i] = "\0"
             self.n_moves -= 1
         else:

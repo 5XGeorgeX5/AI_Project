@@ -3,7 +3,7 @@ from GomokuBoard import GomokuBoard
 
 class MiniMaxAIPlayer(BaseAIPlayer):
     __corners = None
-    __depth = 3
+    __depth = 2
     def __init__(self, board: GomokuBoard ):
         super().__init__(board)
 
