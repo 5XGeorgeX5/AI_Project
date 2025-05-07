@@ -43,6 +43,14 @@ class GomokuBoard:
         # to be implemented
         pass
 
+    def get_corneres(self) -> list[int, int]:
+        # to be implemented
+        pass
+
+    def set_corners(self, corners : list[int , int]):
+        # to be implemented
+        pass
+
 
 # Players
 # ___________________________________

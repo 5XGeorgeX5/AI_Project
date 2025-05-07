@@ -581,7 +581,7 @@ class GomokuBoard:
     def __init__(self):
         self.board = ["\0"] * 225
         self.n_moves = 0
-        self.corners = [50000,-50000]
+        self.corners = [50000,50000,-50000, -50000] # [start row, start colm, end row , end colm]
 
     def is_winner(self) -> bool:
         for winning_position in self.__winning_positions:
@@ -606,8 +606,13 @@ class GomokuBoard:
         if 0 <= i < 225 and self.board[i] == "\0":
             self.board[i] = "X" if self.n_moves % 2 == 0 else "O"
             self.n_moves += 1
-            self.corners[0] = min(self.corners[0], i)
-            self.corners[1] = max(self.corners[0], i)
+            row = i // 15
+            colm = i % 15
+
+            self.corners[0] = min(self.corners[0], row)
+            self.corners[1] = min(self.corners[1], colm)
+            self.corners[2] = max(self.corners[2], row)
+            self.corners[3] = max(self.corners[3], colm)
             return True
         return False
 
@@ -631,16 +636,25 @@ class GomokuBoard:
     def heuristic(self) -> int:
         xScore = 0
         oScore = 0
+        self.display_board()
         for winning_position in self.__winning_positions:
             total = 0
             for cell in winning_position:
                 total += ord(self.board[cell])
             if total % ord("X") == 0:
                 count = total / ord("X")
+                if(count == 3):
+                    for i in winning_position:
+                        print(f"({i//15} , {i % 15}) : {self.board[i]} : {ord(self.board[i])}")
                 xScore += count * count * count
             elif total % ord("O") == 0:
                 count = total / ord("O")
+                if(count == 3):
+                    for i in winning_position:
+                        print(f"({i//15} , {i % 15})")
                 oScore += count * count * count
+           
+        print()             
         return xScore - oScore
     
     def set_corners(self, corners : list[int , int]):
