@@ -636,32 +636,37 @@ class GomokuBoard:
     def heuristic(self) -> int:
         xScore = 0
         oScore = 0
-        self.display_board()
+        isfour = False
         for winning_position in self.__winning_positions:
             total = 0
             for cell in winning_position:
                 total += ord(self.board[cell])
             if total % ord("X") == 0:
                 count = total / ord("X")
-                if(count == 3):
-                    for i in winning_position:
-                        print(f"({i//15} , {i % 15}) : {self.board[i]} : {ord(self.board[i])}")
+                # if(count == 3):
+                #     for i in winning_position:
+                #         print(f"({i//15} , {i % 15}) : {self.board[i]} : {ord(self.board[i])}")
                 xScore += count * count * count
             elif total % ord("O") == 0:
                 count = total / ord("O")
-                if(count == 3):
-                    for i in winning_position:
-                        print(f"({i//15} , {i % 15})")
+                # if(count == 3):
+                #     for i in winning_position:
+                #         print(f"({i//15} , {i % 15})")
+                if(count == 4):
+                    #self.display_board()
+                    isfour = True
+
                 oScore += count * count * count
-           
-        print()             
+        if isfour:
+           # print(xScore - oScore)             
+           # print()   
+           pass
         return xScore - oScore
     
     def set_corners(self, corners : list[int , int]):
-        self.corners[0] = corners[0]
-        self.corners[1] = corners[1]
+        self.corners = corners.copy()
 
     def get_corneres(self) -> list[int, int]:
-        return self.corners.copy()
+        return self.corners.copy()#
 
     
