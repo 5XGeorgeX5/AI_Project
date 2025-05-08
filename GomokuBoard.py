@@ -1,4 +1,5 @@
 class GomokuBoard:
+    __lastMove = None
     # region winning_positions
     __winning_positions = [
         [0, 1, 2, 3, 4],
@@ -583,21 +584,61 @@ class GomokuBoard:
         self.n_moves = 0
         self.corners = [50000,50000,-50000, -50000] # [start row, start colm, end row , end colm]
 
-    def is_winner(self) -> bool:
-        for winning_position in self.__winning_positions:
-            if self.board[winning_position[0]] != "\0":
-                if all(
-                    self.board[pos] == self.board[winning_position[0]]
-                    for pos in winning_position
-                ):
-                    return True
-        return False
+    # def is_winner(self) -> bool:
+    #     for winning_position in self.__winning_positions:
+    #         if self.board[winning_position[0]] != "\0":
+    #             if all(
+    #                 self.board[pos] == self.board[winning_position[0]]
+    #                 for pos in winning_position
+    #             ):
+    #                 return True
+    #     return False
 
+    def is_win(self) -> bool:
+        if self.__lastMove is None:
+            return False
+
+        lastMoveSymbol = "O" if self.n_moves % 2 == 0 else "X"
+        width = 15
+        board = self.board
+        index = self.__lastMove
+        row, col = divmod(index, width)
+
+        directions = [
+            (0, 1),   # Horizontal →
+            (1, 0),   # Vertical ↓
+            (1, 1),   # Diagonal ↘
+            (1, -1),  # Diagonal ↙
+        ]
+
+        def check_line(row, col, dr, dc):
+            count = 0
+            for d in range(-4, 5):  # check from -4 to +4 steps
+                r = row + dr * d
+                c = col + dc * d
+                if 0 <= r < width and 0 <= c < width:
+                    idx = r * width + c
+                    if board[idx] == lastMoveSymbol:
+                        count += 1
+                        if count == 5:
+                            return True
+                    else:
+                        count = 0
+                else:
+                    count = 0
+            return False
+
+        for dr, dc in directions:
+            if check_line(row, col, dr, dc):
+                return True
+
+        return False
+    
     def is_draw(self) -> bool:
-        return not self.is_winner() and self.n_moves == 225
+        return not self.is_win() and self.n_moves == 225
 
     def game_is_over(self) -> bool:
-        return self.is_winner() or self.is_draw()
+        return self.is_win() or self.is_draw()
 
     def moves(self) -> int:
         return self.n_moves
@@ -613,6 +654,7 @@ class GomokuBoard:
             self.corners[1] = min(self.corners[1], colm)
             self.corners[2] = max(self.corners[2], row)
             self.corners[3] = max(self.corners[3], colm)
+            self.__lastMove = i
             return True
         return False
 
@@ -620,6 +662,7 @@ class GomokuBoard:
         if 0 <= i < 225 and self.board[i] != "\0":
             self.board[i] = "\0"
             self.n_moves -= 1
+            self.__lastMove = None
         else:
             raise ValueError("Invalid position to reset.")
 
@@ -632,6 +675,7 @@ class GomokuBoard:
     def reset_board(self):
         self.board = ["\0"] * 225
         self.n_moves = 0
+        self.__lastMove = None
 
     def heuristic(self) -> int:
         xScore = 0

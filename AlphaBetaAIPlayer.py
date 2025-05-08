@@ -2,13 +2,13 @@ from structure import BaseAIPlayer
 from GomokuBoard import GomokuBoard
 
 class AlphaBetaAIPlayer(BaseAIPlayer):
-    __depth = 2
+    __depth = 4
 
     def __init__(self, board: GomokuBoard):
         super().__init__(board)
 
     def minimax(self, maximizingPlayer: bool, depth: int, alpha : int , beta: int) -> int:
-        if self.board.is_winner():
+        if self.board.is_win():
             if maximizingPlayer :
                 return -500000 + self.board.moves()
             else:

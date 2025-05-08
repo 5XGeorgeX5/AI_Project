@@ -7,6 +7,8 @@ class GomokuBoard:
     def is_winner(self) -> bool:
         # to be implemented
         pass
+    def is_win(self) -> bool:
+        pass
 
     def is_draw(self) -> bool:
         # to be implemented

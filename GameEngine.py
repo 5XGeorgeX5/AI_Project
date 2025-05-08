@@ -27,7 +27,7 @@ class GameEngine:
                 except ValueError as e:
                     print(e)
 
-            if self.board.is_winner():
+            if self.board.is_win():
                 self.board.display_board()
                 print(f"Player {self.current_player_idx + 1} wins!")
                 return
@@ -41,7 +41,7 @@ class GameEngine:
 
 board = GomokuBoard()
 player1 = AlphaBetaAIPlayer(board)
-player2 = MiniMaxAIPlayer(board)
+player2 = AlphaBetaAIPlayer(board)
 
 engine = GameEngine(player1, player2, board)
 engine.run()
