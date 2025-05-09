@@ -1,3 +1,9 @@
+class TileType:
+    EMPTY = 0
+    BLACK = 7
+    WHITE = 11
+
+
 class GomokuBoard:
     __lastMove = None
     # region winning_positions
@@ -578,7 +584,7 @@ class GomokuBoard:
     # endregion
 
     def __init__(self):
-        self.board = ["\0"] * 225
+        self.board = [TileType.EMPTY] * 225
         self.n_moves = 0
         self.corners = [
             50000,
@@ -589,7 +595,7 @@ class GomokuBoard:
 
     # def is_winner(self) -> bool:
     #     for winning_position in self.__winning_positions:
-    #         if self.board[winning_position[0]] != "\0":
+    #         if self.board[winning_position[0]] != TileType.EMPTY:
     #             if all(
     #                 self.board[pos] == self.board[winning_position[0]]
     #                 for pos in winning_position
@@ -601,7 +607,7 @@ class GomokuBoard:
         if self.__lastMove is None:
             return False
 
-        lastMoveSymbol = "O" if self.n_moves % 2 == 0 else "X"
+        lastMoveSymbol = TileType.WHITE if self.n_moves % 2 == 0 else TileType.BLACK
         width = 15
         board = self.board
         index = self.__lastMove
@@ -647,56 +653,60 @@ class GomokuBoard:
         return self.n_moves
 
     def update_board(self, i) -> bool:
-        if 0 <= i < 225 and self.board[i] == "\0":
-            self.board[i] = "X" if self.n_moves % 2 == 0 else "O"
+        if 0 <= i < 225 and self.board[i] == TileType.EMPTY:
+            self.board[i] = TileType.BLACK if self.n_moves % 2 == 0 else TileType.WHITE
             self.n_moves += 1
-            row = i // 15
-            colm = i % 15
+            row, col = divmod(i, 15)
 
             self.corners[0] = min(self.corners[0], row)
-            self.corners[1] = min(self.corners[1], colm)
+            self.corners[1] = min(self.corners[1], col)
             self.corners[2] = max(self.corners[2], row)
-            self.corners[3] = max(self.corners[3], colm)
+            self.corners[3] = max(self.corners[3], col)
             self.__lastMove = i
             return True
         return False
 
     def reset(self, i: int) -> None:
-        if 0 <= i < 225 and self.board[i] != "\0":
-            self.board[i] = "\0"
+        if 0 <= i < 225 and self.board[i] != TileType.EMPTY:
+            self.board[i] = TileType.EMPTY
             self.n_moves -= 1
             self.__lastMove = None
         else:
             raise ValueError("Invalid position to reset.")
 
     def display_board(self) -> None:
+        printableBoard = [
+            "-" if i == TileType.EMPTY else "X" if i == TileType.BLACK else "O"
+            for i in self.board
+        ]
         for i in range(1, 16):
             print(f"{i:02}) ", end="")
-            row = " ".join(self.board[(i - 1) * 15 : (i) * 15])
-            print(row.replace("\0", "-"))
+            row = " ".join(printableBoard[(i - 1) * 15 : (i) * 15])
+            print(row)
 
     def reset_board(self):
-        self.board = ["\0"] * 225
+        self.board = [TileType.EMPTY] * 225
+        self.corners = [50000, 50000, -50000, -50000]
         self.n_moves = 0
         self.__lastMove = None
 
     def heuristic(self) -> int:
-        xScore = 0
-        oScore = 0
+        blackScore: int = 0
+        whiteScore: int = 0
         for winning_position in self.__winning_positions:
             total = 0
             for cell in winning_position:
-                total += ord(self.board[cell])
-            if total % ord("X") == 0:
-                count = total / ord("X")
-                xScore += count**count
-            elif total % ord("O") == 0:
-                count = total / ord("O")
-                oScore += count**count
-        return xScore - oScore
+                total += self.board[cell]
+            if total % TileType.BLACK == 0:
+                count = total // TileType.BLACK
+                blackScore += count**count
+            elif total % TileType.WHITE == 0:
+                count = total // TileType.WHITE
+                whiteScore += count**count
+        return blackScore - whiteScore
 
-    def set_corners(self, corners: list[int, int]):
+    def set_corners(self, corners: list[int]):
         self.corners = corners.copy()
 
-    def get_corners(self) -> list[int, int]:
+    def get_corners(self) -> list[int]:
         return self.corners.copy()
