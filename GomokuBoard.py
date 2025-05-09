@@ -710,7 +710,7 @@ class GomokuBoard:
     def set_corners(self, corners : list[int , int]):
         self.corners = corners.copy()
 
-    def get_corneres(self) -> list[int, int]:
+    def get_corners(self) -> list[int, int]:
         return self.corners.copy()#
 
     

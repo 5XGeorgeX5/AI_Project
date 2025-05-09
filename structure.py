@@ -7,6 +7,7 @@ class GomokuBoard:
     def is_winner(self) -> bool:
         # to be implemented
         pass
+
     def is_win(self) -> bool:
         pass
 
@@ -45,11 +46,11 @@ class GomokuBoard:
         # to be implemented
         pass
 
-    def get_corneres(self) -> list[int, int]:
+    def get_corners(self) -> list[int, int]:
         # to be implemented
         pass
 
-    def set_corners(self, corners : list[int , int]):
+    def set_corners(self, corners: list[int, int]):
         # to be implemented
         pass
 
@@ -92,7 +93,7 @@ class MiniMaxAIPlayer(BaseAIPlayer):
         pass
 
 
-class AlphaetaAIPlayer(BaseAIPlayer):
+class AlphaBetaAIPlayer(BaseAIPlayer):
     def __init__(self, board: GomokuBoard):
         super().__init__(board)
 
