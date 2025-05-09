@@ -117,7 +117,4 @@ class MiniMaxAIPlayer(BaseAIPlayer):
                         self.board.reset(j)
                         self.board.set_corners(corners)
                 i += 15
-            print(minEval)
-        if index == -1:
-            raise ValueError("george is stupid")
         return index

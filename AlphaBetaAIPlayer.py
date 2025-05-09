@@ -99,6 +99,7 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
         end = (row + 1) * 15 + (colm + 1)
         length = corners[3] - corners[1] + 3
         i = start
+        result = 0
         if maximizingPlayer:
             maxEval = -500000000
             while i < end:
@@ -108,6 +109,7 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
                         if value > maxEval:
                             index = j
                             maxEval = value
+                            result = value
                         alpha = max(alpha, value)
                         self.board.reset(j)
                         self.board.set_corners(corners)
@@ -121,11 +123,10 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
                         if value < minEval:
                             index = j
                             minEval = value
+                            result = value
                         beta = min(beta, value)
                         self.board.reset(j)
                         self.board.set_corners(corners)
                 i += 15
-        if index == -1:
-            raise ValueError("george is stupid")
-
+        print(result)
         return index
