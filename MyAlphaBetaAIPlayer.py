@@ -15,7 +15,10 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
         elif self.board.moves() == 225:
             return 0
         elif depth == 0:
-            return self.board.heuristic()
+            if self.board.moves() % 2 == 0:
+                return self.board.heuristic()
+            else:
+                return -self.board.heuristic()
 
         corners = self.board.get_corners()
         row = corners[0]
