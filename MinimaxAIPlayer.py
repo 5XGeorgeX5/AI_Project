@@ -9,6 +9,7 @@ class MiniMaxAIPlayer(BaseAIPlayer):
         super().__init__(board)
 
     def minimax(self, maximizingPlayer: bool, depth: int) -> int:
+        self.runs += 1
         if self.board.is_win():
             if maximizingPlayer:
                 return -500000 + self.board.moves()

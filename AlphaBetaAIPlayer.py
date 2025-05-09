@@ -3,12 +3,13 @@ from GomokuBoard import GomokuBoard
 
 
 class AlphaBetaAIPlayer(BaseAIPlayer):
-    __depth = 4
+    __depth = 2
 
     def __init__(self, board: GomokuBoard):
         super().__init__(board)
 
     def minimax(self, maximizingPlayer: bool, depth: int, alpha: int, beta: int) -> int:
+        self.runs += 1
         if self.board.is_win():
             if maximizingPlayer:
                 return -500000 + self.board.moves()

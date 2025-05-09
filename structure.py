@@ -75,6 +75,7 @@ class GomokuPlayer(Player):
 class BaseAIPlayer(Player):
     def __init__(self, board: GomokuBoard):
         self.board = board
+        self.runs = 0
 
     def get_move(self) -> int:
         raise NotImplementedError

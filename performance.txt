@@ -1,0 +1,15 @@
+Player 1 wins!
+Player 1:
+Average time: 0.771759 seconds
+Max time: 2.377699 seconds
+Min time: 0.000003 seconds
+Runs: 142411
+
+Player 2:
+Average time: 0.653512 seconds
+Max time: 1.339960 seconds
+Min time: 0.010976 seconds
+Runs: 117679
+
+==========================================
+
