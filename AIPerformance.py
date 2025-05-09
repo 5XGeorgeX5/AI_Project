@@ -1,4 +1,4 @@
-from GomokuBoard import GomokuBoard
+from GomokuBoard import GomokuBoard, TileType
 from GomokuPlayer import GomokuPlayer
 from structure import Player
 from MinimaxAIPlayer import MiniMaxAIPlayer
@@ -13,6 +13,8 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
     players = (player1, player2)
     current_player_idx = 0
     file = open("performance.txt", "a")
+
+    total_time_start = time.perf_counter()
 
     while True:
         current_player = players[current_player_idx]
@@ -42,6 +44,9 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
             break
 
         current_player_idx = 1 - current_player_idx
+    total_time_end = time.perf_counter()
+    total_elapsed_time = total_time_end - total_time_start
+    file.write(f"Total time: {total_elapsed_time:.6f} seconds\n\n")
 
     averages[0] /= (board.moves() + 1) // 2
     averages[1] /= board.moves() // 2
@@ -57,7 +62,16 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
     file.write(f"Max time: {maxes[1]:.6f} seconds\n")
     file.write(f"Min time: {mins[1]:.6f} seconds\n")
     file.write(f"Runs: {player2.runs}\n\n")
-    file.write("==========================================\n\n")
+    printableBoard = [
+        "-" if i == TileType.EMPTY else "X" if i == TileType.BLACK else "O"
+        for i in board.board
+    ]
+    for i in range(1, 16):
+        file.write(f"{i:02}) ")
+        row = " ".join(printableBoard[(i - 1) * 15 : (i) * 15])
+        file.write(row)
+        file.write("\n")
+    file.write("\n==========================================\n\n")
     file.close()
 
 
