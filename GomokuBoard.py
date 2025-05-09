@@ -576,13 +576,16 @@ class GomokuBoard:
         [164, 178, 192, 206, 220],
     ]
     # endregion
-    
-    
 
     def __init__(self):
         self.board = ["\0"] * 225
         self.n_moves = 0
-        self.corners = [50000,50000,-50000, -50000] # [start row, start colm, end row , end colm]
+        self.corners = [
+            50000,
+            50000,
+            -50000,
+            -50000,
+        ]  # [start row, start colm, end row , end colm]
 
     # def is_winner(self) -> bool:
     #     for winning_position in self.__winning_positions:
@@ -605,9 +608,9 @@ class GomokuBoard:
         row, col = divmod(index, width)
 
         directions = [
-            (0, 1),   # Horizontal →
-            (1, 0),   # Vertical ↓
-            (1, 1),   # Diagonal ↘
+            (0, 1),  # Horizontal →
+            (1, 0),  # Vertical ↓
+            (1, 1),  # Diagonal ↘
             (1, -1),  # Diagonal ↙
         ]
 
@@ -633,7 +636,7 @@ class GomokuBoard:
                 return True
 
         return False
-    
+
     def is_draw(self) -> bool:
         return not self.is_win() and self.n_moves == 225
 
@@ -680,37 +683,20 @@ class GomokuBoard:
     def heuristic(self) -> int:
         xScore = 0
         oScore = 0
-        isfour = False
         for winning_position in self.__winning_positions:
             total = 0
             for cell in winning_position:
                 total += ord(self.board[cell])
             if total % ord("X") == 0:
                 count = total / ord("X")
-                # if(count == 3):
-                #     for i in winning_position:
-                #         print(f"({i//15} , {i % 15}) : {self.board[i]} : {ord(self.board[i])}")
-                xScore += count ** count
+                xScore += count**count
             elif total % ord("O") == 0:
                 count = total / ord("O")
-                # if(count == 3):
-                #     for i in winning_position:
-                #         print(f"({i//15} , {i % 15})")
-                if(count == 4):
-                    #self.display_board()
-                    isfour = True
-
-                oScore += count ** count
-        if isfour:
-           # print(xScore - oScore)             
-           # print()   
-           pass
+                oScore += count**count
         return xScore - oScore
-    
-    def set_corners(self, corners : list[int , int]):
+
+    def set_corners(self, corners: list[int, int]):
         self.corners = corners.copy()
 
     def get_corners(self) -> list[int, int]:
-        return self.corners.copy()#
-
-    
+        return self.corners.copy()
