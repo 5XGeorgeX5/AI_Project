@@ -3,7 +3,7 @@ from GomokuBoard import GomokuBoard
 
 
 class AlphaBetaAIPlayer(BaseAIPlayer):
-    __depth = 2
+    __depth = 3
 
     def __init__(self, board: GomokuBoard):
         super().__init__(board)
@@ -128,5 +128,7 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
                         self.board.reset(j)
                         self.board.set_corners(corners)
                 i += 15
-        print(result)
+        print(
+            f"{(index // 15 + 1, index % 15 + 1)}: {result}, moves: {self.board.moves() + 1}"
+        )
         return index

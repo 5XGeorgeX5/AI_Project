@@ -697,13 +697,18 @@ class GomokuBoard:
             total = 0
             for cell in winning_position:
                 total += self.board[cell]
+            if total == 0:
+                continue
             if total % TileType.BLACK == 0:
                 count = total // TileType.BLACK
                 blackScore += count**count
             elif total % TileType.WHITE == 0:
                 count = total // TileType.WHITE
                 whiteScore += count**count
-        return blackScore - whiteScore
+        if self.moves() % 2 == 0:
+            return blackScore * 2 - whiteScore
+        else:
+            return blackScore - whiteScore * 2
 
     def set_corners(self, corners: list[int]):
         self.corners = corners.copy()
