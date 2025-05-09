@@ -46,13 +46,13 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
             while i < end:
                 for j in range(i, i + length):
                     if self.board.update_board(j):
-                        eval = self.minimax(False, depth - 1, alpha, beta)
-                        maxEval = max(maxEval, eval)
+                        value = self.minimax(False, depth - 1, alpha, beta)
+                        maxEval = max(maxEval, value)
                         self.board.reset(j)
                         self.board.set_corners(corners)
-                        alpha = max(alpha, eval)
+                        alpha = max(alpha, value)
                         if beta <= alpha:
-                            break
+                            return maxEval
                 i += 15
             return maxEval
         else:
@@ -60,13 +60,13 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
             while i < end:
                 for j in range(i, i + length):
                     if self.board.update_board(j):
-                        eval = self.minimax(True, depth - 1, alpha, beta)
-                        minEval = min(minEval, eval)
+                        value = self.minimax(True, depth - 1, alpha, beta)
+                        minEval = min(minEval, value)
                         self.board.reset(j)
                         self.board.set_corners(corners)
-                        beta = min(beta, eval)
+                        beta = min(beta, value)
                         if beta <= alpha:
-                            break
+                            return minEval
                 i += 15
             return minEval
 
@@ -125,7 +125,6 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
                         self.board.reset(j)
                         self.board.set_corners(corners)
                 i += 15
-            print(minEval)
         if index == -1:
             raise ValueError("george is stupid")
 

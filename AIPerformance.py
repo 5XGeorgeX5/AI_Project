@@ -17,6 +17,7 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
     while True:
         current_player = players[current_player_idx]
         board.display_board()
+        print()
 
         start = time.perf_counter()
         i = current_player.get_move()
