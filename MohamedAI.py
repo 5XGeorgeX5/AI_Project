@@ -12,9 +12,9 @@ class MohamedAIPlayer(BaseAIPlayer):
         self.runs += 1
         if self.board.is_win():
             if maximizingPlayer:
-                return -500000 + self.board.moves()
+                return -90000000 + self.board.moves()
             else:
-                return 500000 - self.board.moves()
+                return 90000000 - self.board.moves()
         elif self.board.moves() == 225:
             return 0
         elif depth == 0:
@@ -27,7 +27,7 @@ class MohamedAIPlayer(BaseAIPlayer):
         length = corners[3] - corners[1] + 1
 
         if maximizingPlayer:
-            maxEval = -500000000
+            maxEval = -90000000000
             while start < end:
                 for j in range(start, start + length):
                     if self.board.update_board(j):
@@ -41,7 +41,7 @@ class MohamedAIPlayer(BaseAIPlayer):
                 start += 15
             return maxEval
         else:
-            minEval = 500000000
+            minEval = 90000000000
             while start < end:
                 for j in range(start, start + length):
                     if self.board.update_board(j):

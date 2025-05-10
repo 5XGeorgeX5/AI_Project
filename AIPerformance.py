@@ -29,7 +29,7 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
         averages[current_player_idx] += elapsed_time
         maxes[current_player_idx] = max(maxes[current_player_idx], elapsed_time)
         mins[current_player_idx] = min(mins[current_player_idx], elapsed_time)
-        if not board.update_board(i):
+        if not board.update_board(i,True):
             print(f"Invalid move {i} from Player {current_player_idx + 1}")
             return
 

@@ -8,6 +8,8 @@ class GomokuBoard:
     __lastMove = None
     # region winning_positions
     __winning_positions = None
+    __winning_positions_dict = None
+
     # endregion
 
     BOARD_SIZE = 15
@@ -90,20 +92,24 @@ class GomokuBoard:
     ]
     # endregion
     PATTERN_SCORES = {
-        (0, 1, 1, 1, 1, 0): 10000,
-        (1, 1, 1, 1, 0): 7000,
-        (0, 1, 1, 1, 1): 7000,
-        # "X_XXX": 1000,
-        # "XX_XX": 1000,
-        # "XXX_X": 1000,
-        (0, 0, 1, 1, 1, 0, 0): 4000,
-        (0, 1, 1, 1, 0): 3000,
-        # "X__XX": 100,
-        # "XX__X": 100,
-        # "X_X_X": 100,
-        (0, 0, 1, 1, 0, 0): 200,
-        (0, 1, 1, 0): 100,
-        (1, 0, 1): 10,
+        (0, 1, 1, 1, 1, 0): 9,
+        (1, 1, 1, 1, 0): 7,
+        (0, 1, 1, 1, 1): 7,
+        #(1, 0, 1, 1, 1): 7,# "X_XXX": 1000,
+        #(1, 1, 0, 1, 1): 7,# "XX_XX": 1000,
+        #(1, 1, 1, 0, 1): 7,# "XXX_X": 1000,
+        #(0, 0, 1, 1, 1, 0, 0): 7,
+        (0, 1, 1, 1, 0): 6,
+        #(1, 0 ,0 ,1 ,1): 4, # "X__XX": 100,
+        #(1,1,0,0,1) : 3,# "XX__X": 100,
+        #(1,0,1,0,1) : 3,# "X_X_X": 100,
+        #(0, 0, 1, 1, 0, 0): 2,
+        (0,1,0,1,1,0): 5,
+        (0,1,1,0,1,0): 5,
+        (0,0, 1, 1, 0,0): 4,
+        (0,0,1,1,0):3,
+        (0,1,1,0,0):3
+        #(1, 0, 1): 1,
     }
 
     # -- Get all lines from board (rows, cols, diagonals) --
@@ -118,18 +124,27 @@ class GomokuBoard:
 
     # -- Count how many times each pattern appears --
     def count_patterns(self, key: tuple) -> int:
-        score = 0
+        counter =0
+        vals = [0,0]
         for pattern, val in self.PATTERN_SCORES.items():
             i = 0
+            flag = False
             size = len(key) - len(pattern)
             len_pattern = len(pattern)
             while i <= size:
                 if key[i : i + len_pattern] == pattern:
-                    score += val
                     i += 1
+                    vals[counter] = val
+                    counter+=1
+                    if counter == 2: 
+                        flag = True
+                        break 
                 else:
                     i += 1
-        return score
+            if flag == True:
+                break
+        
+        return 2 * ((3 ** vals[0]))if vals[0] !=0 else 0 + ((3 ** vals[1]) if vals[1] !=0 else 0)
 
     # -- Final evaluation --
     def evaluate_board(self, symbol: int) -> int:
@@ -152,59 +167,94 @@ class GomokuBoard:
             -50000,
             -50000,
         ]  # [start row, start colm, end row , end colm]
-        self.__winning_positions = self.get_winnig_positions()
+        self.__winning_positions = self.get_winning_positions()
+        self.__winning_positions_dict= self.get_winning_positions_dict()
 
-    def get_winnig_positions(self) -> list[list[int]]:
-        # Check rows
-        myList = []
+    def get_winning_positions_dict(self) -> dict[int, list[tuple[int, ...]]]:
+        winning_dict: dict[int, list[tuple[int, ...]]] = {}
+
+        def add_position(pos: tuple[int,...]):
+            pos_tuple = tuple(pos)
+            for idx in pos:
+                if idx not in winning_dict:
+                    winning_dict[idx] = []
+                winning_dict[idx].append(pos_tuple)
+
+        # Rows
         for i in range(15):
             for j in range(11):
-                myList.append(
-                    [
-                        i * 15 + j,
-                        i * 15 + j + 1,
-                        i * 15 + j + 2,
-                        i * 15 + j + 3,
-                        i * 15 + j + 4,
-                    ]
-                )
+                pos = [i * 15 + j + k for k in range(5)]
+                add_position(pos)
+
+        # Columns
+        for i in range(11):
+            for j in range(15):
+                pos = [(i + k) * 15 + j for k in range(5)]
+                add_position(pos)
+
+        # Diagonals (top-left to bottom-right)
+        for i in range(11):
+            for j in range(11):
+                pos = [(i + k) * 15 + j + k for k in range(5)]
+                add_position(pos)
+
+        # Diagonals (top-right to bottom-left)
+        for i in range(11):
+            for j in range(4, 15):
+                pos = [(i + k) * 15 + j - k for k in range(5)]
+                add_position(pos)
+
+        return winning_dict
+    
+
+    def get_winning_positions(self) -> set[tuple[int, ...]]:
+        winning_positions = set()
+
+        # Check rows
+        for i in range(15):
+            for j in range(11):
+                winning_positions.add((
+                    i * 15 + j,
+                    i * 15 + j + 1,
+                    i * 15 + j + 2,
+                    i * 15 + j + 3,
+                    i * 15 + j + 4,
+                ))
+
         # Check columns
         for i in range(11):
             for j in range(15):
-                myList.append(
-                    [
-                        (i) * 15 + j,
-                        (i + 1) * 15 + j,
-                        (i + 2) * 15 + j,
-                        (i + 3) * 15 + j,
-                        (i + 4) * 15 + j,
-                    ]
-                )
-        # Check diagonals
+                winning_positions.add((
+                    i * 15 + j,
+                    (i + 1) * 15 + j,
+                    (i + 2) * 15 + j,
+                    (i + 3) * 15 + j,
+                    (i + 4) * 15 + j,
+                ))
+
+        # Check diagonals (top-left to bottom-right)
         for i in range(11):
             for j in range(11):
-                myList.append(
-                    [
-                        (i) * 15 + j,
-                        (i + 1) * 15 + j + 1,
-                        (i + 2) * 15 + j + 2,
-                        (i + 3) * 15 + j + 3,
-                        (i + 4) * 15 + j + 4,
-                    ]
-                )
-        # Check diagonals (reverse)
+                winning_positions.add((
+                    i * 15 + j,
+                    (i + 1) * 15 + j + 1,
+                    (i + 2) * 15 + j + 2,
+                    (i + 3) * 15 + j + 3,
+                    (i + 4) * 15 + j + 4,
+                ))
+
+        # Check diagonals (top-right to bottom-left)
         for i in range(11):
             for j in range(4, 15):
-                myList.append(
-                    [
-                        (i) * 15 + j,
-                        (i + 1) * 15 + j - 1,
-                        (i + 2) * 15 + j - 2,
-                        (i + 3) * 15 + j - 3,
-                        (i + 4) * 15 + j - 4,
-                    ]
-                )
-        return myList
+                winning_positions.add((
+                    i * 15 + j,
+                    (i + 1) * 15 + j - 1,
+                    (i + 2) * 15 + j - 2,
+                    (i + 3) * 15 + j - 3,
+                    (i + 4) * 15 + j - 4,
+                ))
+
+        return winning_positions
 
     def is_win(self) -> bool:
         if self.__lastMove is None:
@@ -255,7 +305,7 @@ class GomokuBoard:
     def moves(self) -> int:
         return self.n_moves
 
-    def update_board(self, i) -> bool:
+    def update_board(self, i, cutting: bool = False) -> bool:
         if 0 <= i < 225 and self.board[i] == TileType.EMPTY:
             self.board[i] = TileType.BLACK if self.n_moves % 2 == 0 else TileType.WHITE
             self.n_moves += 1
@@ -266,6 +316,13 @@ class GomokuBoard:
             self.corners[2] = max(self.corners[2], row + 1 if row < 14 else 14)
             self.corners[3] = max(self.corners[3], col + 1 if col < 14 else 14)
             self.__lastMove = i
+            if cutting:
+                for winning_position in self.__winning_positions_dict[i]:
+                    total = 0
+                    for cell in winning_position:
+                        total += self.board[cell]
+                    if total % TileType.WHITE != 0 and total % TileType.BLACK != 0 and winning_position in self.__winning_positions:
+                            self.__winning_positions.remove(winning_position)
             return True
         return False
 

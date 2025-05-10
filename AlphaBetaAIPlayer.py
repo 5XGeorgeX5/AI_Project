@@ -35,7 +35,7 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
             maxEval = -500000000
             while start < end:
                 for j in range(start, start + length):
-                    if self.board.update_board(j):
+                    if self.board.update_board(j,False):
                         value = self.minimax(False, depth - 1, alpha, beta)
                         maxEval = max(maxEval, value)
                         self.board.reset(j)
@@ -49,7 +49,7 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
             minEval = 500000000
             while start < end:
                 for j in range(start, start + length):
-                    if self.board.update_board(j):
+                    if self.board.update_board(j,False):
                         value = self.minimax(True, depth - 1, alpha, beta)
                         minEval = min(minEval, value)
                         self.board.reset(j)
