@@ -261,10 +261,10 @@ class GomokuBoard:
             self.n_moves += 1
             row, col = divmod(i, 15)
 
-            self.corners[0] = min(self.corners[0], row)
-            self.corners[1] = min(self.corners[1], col)
-            self.corners[2] = max(self.corners[2], row)
-            self.corners[3] = max(self.corners[3], col)
+            self.corners[0] = min(self.corners[0], row - 1 if row > 0 else 0)
+            self.corners[1] = min(self.corners[1], col - 1 if col > 0 else 0)
+            self.corners[2] = max(self.corners[2], row + 1 if row < 14 else 14)
+            self.corners[3] = max(self.corners[3], col + 1 if col < 14 else 14)
             self.__lastMove = i
             return True
         return False

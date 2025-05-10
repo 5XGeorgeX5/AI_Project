@@ -26,30 +26,15 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
                 return blackScore * 3 - whiteScore
 
         corners = self.board.get_corners()
-        row = corners[0]
-        colm = corners[1]
-        if row == 0:
-            row = 1
-        if colm == 0:
-            colm = 1
 
-        start = (row - 1) * 15 + (colm - 1)
+        start = corners[0] * 15 + corners[1]
+        end = corners[2] * 15 + corners[3]
+        length = corners[3] - corners[1] + 1
 
-        row = corners[2]
-        colm = corners[3]
-
-        if row == 14:
-            row = 13
-        if colm == 14:
-            colm = 13
-
-        end = (row + 1) * 15 + (colm + 1)
-        length = corners[3] - corners[1] + 3
-        i = start
         if maximizingPlayer:
             maxEval = -500000000
-            while i < end:
-                for j in range(i, i + length):
+            while start < end:
+                for j in range(start, start + length):
                     if self.board.update_board(j):
                         value = self.minimax(False, depth - 1, alpha, beta)
                         maxEval = max(maxEval, value)
@@ -58,12 +43,12 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
                         alpha = max(alpha, value)
                         if beta <= alpha:
                             return maxEval
-                i += 15
+                start += 15
             return maxEval
         else:
             minEval = 500000000
-            while i < end:
-                for j in range(i, i + length):
+            while start < end:
+                for j in range(start, start + length):
                     if self.board.update_board(j):
                         value = self.minimax(True, depth - 1, alpha, beta)
                         minEval = min(minEval, value)
@@ -72,12 +57,11 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
                         beta = min(beta, value)
                         if beta <= alpha:
                             return minEval
-                i += 15
+                start += 15
             return minEval
 
     def get_move(self) -> int:
-        self.__isBlack = self.board.moves() % 2 == 0
-        maximizingPlayer = (self.board.moves() % 2) == 0
+        self.__isBlack = (self.board.moves() % 2) == 0
         if self.board.moves() == 0:
             return (7 - 1) * 15 + (7 - 1)
         index = -1
@@ -85,31 +69,16 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
         beta = 500000000
 
         corners = self.board.get_corners()
-        row = corners[0]
-        colm = corners[1]
-        if row == 0:
-            row = 1
-        if colm == 0:
-            colm = 1
 
-        start = (row - 1) * 15 + (colm - 1)
+        start = corners[0] * 15 + corners[1]
+        end = corners[2] * 15 + corners[3]
+        length = corners[3] - corners[1] + 1
 
-        row = corners[2]
-        colm = corners[3]
-
-        if row == 14:
-            row = 13
-        if colm == 14:
-            colm = 13
-
-        end = (row + 1) * 15 + (colm + 1)
-        length = corners[3] - corners[1] + 3
-        i = start
         result = 0
-        if maximizingPlayer:
+        if self.__isBlack:
             maxEval = -500000000
-            while i < end:
-                for j in range(i, i + length):
+            while start < end:
+                for j in range(start, start + length):
                     if self.board.update_board(j):
                         value = self.minimax(False, self.__depth - 1, alpha, beta)
                         if value > maxEval:
@@ -119,11 +88,11 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
                         alpha = max(alpha, value)
                         self.board.reset(j)
                         self.board.set_corners(corners)
-                i += 15
+                start += 15
         else:
             minEval = 500000000
-            while i < end:
-                for j in range(i, i + length):
+            while start < end:
+                for j in range(start, start + length):
                     if self.board.update_board(j):
                         value = self.minimax(True, self.__depth - 1, alpha, beta)
                         if value < minEval:
@@ -133,7 +102,7 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
                         beta = min(beta, value)
                         self.board.reset(j)
                         self.board.set_corners(corners)
-                i += 15
+                start += 15
         print(
             f"{(index // 15 + 1, index % 15 + 1)}: {result}, moves: {self.board.moves() + 1}"
         )

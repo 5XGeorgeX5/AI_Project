@@ -3,7 +3,8 @@ from GomokuBoard import GomokuBoard
 
 
 class MiniMaxAIPlayer(BaseAIPlayer):
-    __depth = 3
+    __depth = 2
+    __isBlack = None
 
     def __init__(self, board: GomokuBoard):
         super().__init__(board)
@@ -18,103 +19,80 @@ class MiniMaxAIPlayer(BaseAIPlayer):
         elif self.board.moves() == 225:
             return 0
         elif depth == 0:
-            return self.board.heuristic()
+            blackScore, whiteScore = self.board.heuristic()
+            if self.__isBlack:
+                return blackScore - whiteScore * 3
+            else:
+                return blackScore * 3 - whiteScore
 
         corners = self.board.get_corners()
-        row = corners[0]
-        colm = corners[1]
-        if row == 0:
-            row = 1
-        if colm == 0:
-            colm = 1
 
-        start = (row - 1) * 15 + (colm - 1)
+        start = corners[0] * 15 + corners[1]
+        end = corners[2] * 15 + corners[3]
+        length = corners[3] - corners[1] + 1
 
-        row = corners[2]
-        colm = corners[3]
-
-        if row == 14:
-            row = 13
-        if colm == 14:
-            colm = 13
-
-        end = (row + 1) * 15 + (colm + 1)
-        length = corners[3] - corners[1] + 3
-        i = start
         if maximizingPlayer:
             maxEval = -500000000
-            while i < end:
-                for j in range(i, i + length):
+            while start < end:
+                for j in range(start, start + length):
                     if self.board.update_board(j):
-                        eval = self.minimax(False, depth - 1)
-                        maxEval = max(maxEval, eval)
+                        value = self.minimax(False, depth - 1)
+                        maxEval = max(maxEval, value)
                         self.board.reset(j)
                         self.board.set_corners(corners)
-                i += 15
+                start += 15
             return maxEval
         else:
             minEval = 500000000
-            while i < end:
-                for j in range(i, i + length):
+            while start < end:
+                for j in range(start, start + length):
                     if self.board.update_board(j):
-                        eval = self.minimax(True, depth - 1)
-                        minEval = min(minEval, eval)
+                        value = self.minimax(True, depth - 1)
+                        minEval = min(minEval, value)
                         self.board.reset(j)
                         self.board.set_corners(corners)
-                i += 15
+                start += 15
             return minEval
 
     def get_move(self) -> int:
-        maximizingPlayer = (self.board.moves() % 2) == 0
+        self.__isBlack = (self.board.moves() % 2) == 0
         if self.board.moves() == 0:
             return (7 - 1) * 15 + (7 - 1)
-
         index = -1
         corners = self.board.get_corners()
-        row = corners[0]
-        colm = corners[1]
-        if row == 0:
-            row = 1
-        if colm == 0:
-            colm = 1
 
-        start = (row - 1) * 15 + (colm - 1)
+        start = corners[0] * 15 + corners[1]
+        end = corners[2] * 15 + corners[3]
+        length = corners[3] - corners[1] + 1
 
-        row = corners[2]
-        colm = corners[3]
-
-        if row == 14:
-            row = 13
-        if colm == 14:
-            colm = 13
-
-        end = (row + 1) * 15 + (colm + 1)
-        length = corners[3] - corners[1] + 3
-        i = start
-        if maximizingPlayer:
+        result = 0
+        if self.__isBlack:
             maxEval = -500000000
-            while i < end:
-                for j in range(i, i + length):
+            while start < end:
+                for j in range(start, start + length):
                     if self.board.update_board(j):
                         value = self.minimax(False, self.__depth - 1)
                         if value > maxEval:
                             index = j
                             maxEval = value
-
+                            result = value
                         self.board.reset(j)
                         self.board.set_corners(corners)
-                i += 15
+                start += 15
         else:
             minEval = 500000000
-            while i < end:
-                for j in range(i, i + length):
+            while start < end:
+                for j in range(start, start + length):
                     if self.board.update_board(j):
                         value = self.minimax(True, self.__depth - 1)
                         if value < minEval:
                             index = j
                             minEval = value
-
+                            result = value
                         self.board.reset(j)
                         self.board.set_corners(corners)
-                i += 15
+                start += 15
+        print(
+            f"{(index // 15 + 1, index % 15 + 1)}: {result}, moves: {self.board.moves() + 1}"
+        )
         return index
