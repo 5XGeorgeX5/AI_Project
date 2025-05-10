@@ -3,6 +3,7 @@ from GomokuPlayer import GomokuPlayer
 from structure import Player
 from MinimaxAIPlayer import MiniMaxAIPlayer
 from AlphaBetaAIPlayer import AlphaBetaAIPlayer
+from MohamedAI import MohamedAIPlayer 
 import time
 
 
@@ -76,7 +77,7 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
 
 
 board = GomokuBoard()
-player1 = AlphaBetaAIPlayer(board)
+player1 = MohamedAIPlayer(board)
 player2 = AlphaBetaAIPlayer(board)
 
 test(player1, player2, board)

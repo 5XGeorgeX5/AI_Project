@@ -2,9 +2,8 @@ from structure import BaseAIPlayer
 from GomokuBoard import GomokuBoard
 
 
-class AlphaBetaAIPlayer(BaseAIPlayer):
+class MohamedAIPlayer(BaseAIPlayer):
     __depth = 2
-    __isBlack = None
 
     def __init__(self, board: GomokuBoard):
         super().__init__(board)
@@ -19,11 +18,7 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
         elif self.board.moves() == 225:
             return 0
         elif depth == 0:
-            blackScore, whiteScore = self.board.heuristic()
-            if self.__isBlack:
-                return blackScore - whiteScore * 3
-            else:
-                return blackScore * 3 - whiteScore
+            return self.board.evaluate_board_for_minimax()
 
         corners = self.board.get_corners()
         row = corners[0]
@@ -76,7 +71,6 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
             return minEval
 
     def get_move(self) -> int:
-        self.__isBlack = self.board.moves() % 2 == 0
         maximizingPlayer = (self.board.moves() % 2) == 0
         if self.board.moves() == 0:
             return (7 - 1) * 15 + (7 - 1)
