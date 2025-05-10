@@ -58,7 +58,7 @@ class MohamedAIPlayer(BaseAIPlayer):
     def get_move(self) -> int:
         maximizingPlayer = (self.board.moves() % 2) == 0
         if self.board.moves() == 0:
-            return (7 - 1) * 15 + (7 - 1)
+            return 112 # position 8, 8
         index = -1
         alpha = -500000000
         beta = 500000000

@@ -57,7 +57,7 @@ class MiniMaxAIPlayer(BaseAIPlayer):
     def get_move(self) -> int:
         self.__isBlack = (self.board.moves() % 2) == 0
         if self.board.moves() == 0:
-            return (7 - 1) * 15 + (7 - 1)
+            return 112 # position 8, 8
         index = -1
         corners = self.board.get_corners()
 

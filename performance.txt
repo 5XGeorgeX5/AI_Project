@@ -1,33 +1,33 @@
 It's a draw!
-Total time: 54.682143 seconds
+Total time: 65.735259 seconds
 
 Player 1:
-Average time: 0.258429 seconds
-Max time: 1.214703 seconds
-Min time: 0.000003 seconds
-Runs: 256730
+Average time: 0.312442 seconds
+Max time: 1.422294 seconds
+Min time: 0.000013 seconds
+Runs: 309805
 
 Player 2:
-Average time: 0.222830 seconds
-Max time: 0.963378 seconds
-Min time: 0.000148 seconds
-Runs: 221505
+Average time: 0.266873 seconds
+Max time: 1.312428 seconds
+Min time: 0.000159 seconds
+Runs: 263087
 
-01) X O X X O O X O X O X X O X O
-02) O O X O X O X X O O X X O O O
-03) X O X O O X X X O X O O O X X
-04) O O O X O X O X O X X X O O X
-05) X X O X O X O O O X O O X X X
-06) O O X X X O X X X O X O O X O
-07) X X O O X O X O X O X O X O X
-08) O O X X X O O X O O O X O X O
-09) X X X O O X O X X X O X X O X
-10) O O X X O O X X O O X O X O X
-11) O O X O X X X O X X O O X X O
-12) O X O X X O X O O X O X O O O
-13) X X O O O X O X X X O O X X O
-14) X O X O X O X X O O X O X O O
-15) X O O X X O O X O X O X O X X
+01) O X X O O X X O X O X O X O O
+02) X X O X O X O O X O X O X O O
+03) X X O O O X X O X O X O X O X
+04) X O X O O X O X O X O X O O X
+05) O O X O X O X O X X O X O X X
+06) O X O O X O X O X O X X O O X
+07) O X O X O X O X X X X O X O O
+08) X O X X O X O X O X O O X X X
+09) X O X O O X X O X O O X X O X
+10) O X O O X O X O X O X O O O X
+11) O O X O O O X X X X O X O X X
+12) X X O O X O O O O X O O X X O
+13) O X X X O X O O X O X X X O O
+14) X X X O O X O X X O O O X X O
+15) X O O X X O X O O X X X O O X
 
 ==========================================
 
