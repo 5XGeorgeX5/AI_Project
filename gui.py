@@ -3,6 +3,9 @@ from PyQt5.QtCore import Qt, QThread, pyqtSignal, QTimer
 from PyQt5.QtGui import QPainter, QBrush
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QMessageBox, QFrame
 
+from GomokuBoard import GomokuBoard
+
+
 # ======================
 # Visual Board Widget
 # ======================
@@ -102,11 +105,6 @@ class GomokuGUI(QWidget):
         self.start_button.clicked.connect(self.start_game)
         layout.addWidget(self.start_button)
 
-        # Add Show Board button
-        self.show_board_button = QPushButton("Show Board", self)
-        self.show_board_button.clicked.connect(self.show_board)
-        layout.addWidget(self.show_board_button)
-
         self.setLayout(layout)
 
     def select_ai_vs_ai(self):
@@ -158,24 +156,6 @@ class GomokuGUI(QWidget):
     def show_result(self, result):
         # TODO: Implement result display logic
         pass
-
-    def show_board(self):
-        if self.board_widget is None:
-            QMessageBox.warning(self, "Warning", "No game has been started yet.")
-            return
-
-        # Create a new window to show the board
-        board_window = QWidget()
-        board_window.setWindowTitle("Current Board State")
-        layout = QVBoxLayout()
-
-        # Create a new BoardWidget with the current board state
-        board_widget = BoardWidget(self.board_widget.board, board_window)
-        layout.addWidget(board_widget)
-
-        board_window.setLayout(layout)
-        board_window.resize(600, 600)
-        board_window.show()
 
 # ======================
 # App Entry Point
