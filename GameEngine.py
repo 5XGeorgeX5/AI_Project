@@ -43,5 +43,3 @@ board = GomokuBoard()
 player1 = AlphaBetaAIPlayer(board)
 player2 = AlphaBetaAIPlayer(board)
 
-engine = GameEngine(player1, player2, board)
-engine.run()
