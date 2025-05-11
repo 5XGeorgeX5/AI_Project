@@ -9,7 +9,7 @@ class GameEngine:
     def __init__(self, player1: Player, player2: Player, board: GomokuBoard):
         self.board = board
         self.players = (player1, player2)
-        self.current_player_idx = 0
+        self.current_player_idx = board.moves() % 2
 
     def run(self):
         while not self.board.game_is_over():
@@ -42,3 +42,6 @@ class GameEngine:
 board = GomokuBoard()
 player1 = AlphaBetaAIPlayer(board)
 player2 = AlphaBetaAIPlayer(board)
+
+engine = GameEngine(player1, player2, board)
+engine.run()

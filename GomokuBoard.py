@@ -39,7 +39,7 @@ class GomokuBoard:
                         elif c == "-":
                             matrix.append(TileType.EMPTY)
                         else:
-                            pass
+                            raise ValueError(f"invalide character: {c}")
         except IOError:
             raise IOError("Error opening file!")
 
@@ -49,6 +49,8 @@ class GomokuBoard:
             raise ValueError("This is an invalid input")
         self.board = matrix
         self.n_moves = x_count + o_count
+        if self.n_moves == 225:
+            raise ValueError("Input can't be a finished game")
         self.initalizeHeuristic()
         self.initalizeCorners()
 

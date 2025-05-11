@@ -75,8 +75,8 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
     file.close()
 
 
-board = GomokuBoard()
+board = GomokuBoard(readBoardInput=False)
 player1 = AlphaBetaAIPlayer(board)
-player2 = AlphaBetaAIPlayer(board)
+player2 = MiniMaxAIPlayer(board)
 
 test(player1, player2, board)
