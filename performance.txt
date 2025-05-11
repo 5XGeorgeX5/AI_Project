@@ -824,3 +824,102 @@ Runs: 839702
 
 ==========================================
 
+It's a draw!
+Total time: 10.387640 seconds
+
+Player 1:
+Average time: 0.047311 seconds
+Max time: 0.228722 seconds
+Min time: 0.000004 seconds
+Runs: 309805
+
+Player 2:
+Average time: 0.040734 seconds
+Max time: 0.201427 seconds
+Min time: 0.000188 seconds
+Runs: 263087
+
+01) O X X O O X X O X O X O X O O
+02) X X O X O X O O X O X O X O O
+03) X X O O O X X O X O X O X O X
+04) X O X O O X O X O X O X O O X
+05) O O X O X O X O X X O X O X X
+06) O X O O X O X O X O X X O O X
+07) O X O X O X O X X X X O X O O
+08) X O X X O X O X O X O O X X X
+09) X O X O O X X O X O O X X O X
+10) O X O O X O X O X O X O O O X
+11) O O X O O O X X X X O X O X X
+12) X X O O X O O O O X O O X X O
+13) O X X X O X O O X O X X X O O
+14) X X X O O X O X X O O O X X O
+15) X O O X X O X O O X X X O O X
+
+==========================================
+
+It's a draw!
+Total time: 10.360209 seconds
+
+Player 1:
+Average time: 0.047413 seconds
+Max time: 0.253788 seconds
+Min time: 0.000005 seconds
+Runs: 309805
+
+Player 2:
+Average time: 0.040373 seconds
+Max time: 0.186719 seconds
+Min time: 0.000165 seconds
+Runs: 263087
+
+01) O X X O O X X O X O X O X O O
+02) X X O X O X O O X O X O X O O
+03) X X O O O X X O X O X O X O X
+04) X O X O O X O X O X O X O O X
+05) O O X O X O X O X X O X O X X
+06) O X O O X O X O X O X X O O X
+07) O X O X O X O X X X X O X O O
+08) X O X X O X O X O X O O X X X
+09) X O X O O X X O X O O X X O X
+10) O X O O X O X O X O X O O O X
+11) O O X O O O X X X X O X O X X
+12) X X O O X O O O O X O O X X O
+13) O X X X O X O O X O X X X O O
+14) X X X O O X O X X O O O X X O
+15) X O O X X O X O O X X X O O X
+
+==========================================
+
+It's a draw!
+Total time: 10.348412 seconds
+
+Player 1:
+Average time: 0.047250 seconds
+Max time: 0.223351 seconds
+Min time: 0.000003 seconds
+Runs: 309805
+
+Player 2:
+Average time: 0.040405 seconds
+Max time: 0.192193 seconds
+Min time: 0.000164 seconds
+Runs: 263087
+
+01) O X X O O X X O X O X O X O O
+02) X X O X O X O O X O X O X O O
+03) X X O O O X X O X O X O X O X
+04) X O X O O X O X O X O X O O X
+05) O O X O X O X O X X O X O X X
+06) O X O O X O X O X O X X O O X
+07) O X O X O X O X X X X O X O O
+08) X O X X O X O X O X O O X X X
+09) X O X O O X X O X O O X X O X
+10) O X O O X O X O X O X O O O X
+11) O O X O O O X X X X O X O X X
+12) X X O O X O O O O X O O X X O
+13) O X X X O X O O X O X X X O O
+14) X X X O O X O X X O O O X X O
+15) X O O X X O X O O X X X O O X
+
+==========================================
+

@@ -11,7 +11,7 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
     maxes = [0.0, 0.0]
     mins = [float("inf"), float("inf")]
     players = (player1, player2)
-    current_player_idx = 0
+    current_player_idx = board.moves() % 2
     file = open("performance.txt", "a")
 
     total_time_start = time.perf_counter()
@@ -76,7 +76,7 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
 
 
 board = GomokuBoard()
-player1 = MiniMaxAIPlayer(board)
-player2 = MiniMaxAIPlayer(board)
+player1 = AlphaBetaAIPlayer(board)
+player2 = AlphaBetaAIPlayer(board)
 
 test(player1, player2, board)
