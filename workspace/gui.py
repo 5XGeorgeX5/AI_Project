@@ -1,15 +1,7 @@
 import sys
 from PyQt5.QtCore import Qt, QThread, pyqtSignal, QTimer
 from PyQt5.QtGui import QPainter, QBrush
-from PyQt5.QtWidgets import (
-    QApplication,
-    QWidget,
-    QPushButton,
-    QVBoxLayout,
-    QLabel,
-    QMessageBox,
-    QFrame,
-)
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QMessageBox, QFrame
 
 from GomokuBoard import GomokuBoard
 
@@ -34,21 +26,17 @@ class BoardWidget(QFrame):
 
     def draw_board(self, painter):
         for i in range(15):
-            painter.drawLine(
-                i * self.cell_size, 0, i * self.cell_size, 15 * self.cell_size
-            )
-            painter.drawLine(
-                0, i * self.cell_size, 15 * self.cell_size, i * self.cell_size
-            )
+            painter.drawLine(i * self.cell_size, 0, i * self.cell_size, 15 * self.cell_size)
+            painter.drawLine(0, i * self.cell_size, 15 * self.cell_size, i * self.cell_size)
 
     def draw_stones(self, painter):
         for i in range(225):
             row = i // 15
             col = i % 15
             stone = self.board.board[i]
-            if stone == "X":
+            if stone == 'X':
                 self.draw_stone(painter, col, row, Qt.black)
-            elif stone == "O":
+            elif stone == 'O':
                 self.draw_stone(painter, col, row, Qt.white)
 
     def draw_stone(self, painter, x, y, color):
@@ -57,7 +45,7 @@ class BoardWidget(QFrame):
             x * self.cell_size + 5,
             y * self.cell_size + 5,
             self.cell_size - 10,
-            self.cell_size - 10,
+            self.cell_size - 10
         )
 
     def mousePressEvent(self, event):
@@ -65,7 +53,6 @@ class BoardWidget(QFrame):
         row = event.y() // self.cell_size
         if 0 <= row < 15 and 0 <= col < 15:
             self.move_made.emit(row, col)
-
 
 # ======================
 # Game Execution Thread
@@ -80,7 +67,6 @@ class GameThread(QThread):
     def run(self):
         # TODO: Implement game logic using the GameEngine
         pass
-
 
 # ======================
 # Main GUI Window
@@ -131,9 +117,7 @@ class GomokuGUI(QWidget):
 
     def select_human_vs_alphabeta(self):
         self.selected_mode = "human_vs_alphabeta"
-        QMessageBox.information(
-            self, "Selection", "Human vs AlphaBeta AI mode selected."
-        )
+        QMessageBox.information(self, "Selection", "Human vs AlphaBeta AI mode selected.")
 
     def select_human_vs_human(self):
         self.selected_mode = "human_vs_human"
@@ -141,9 +125,7 @@ class GomokuGUI(QWidget):
 
     def start_game(self):
         if not self.selected_mode:
-            QMessageBox.warning(
-                self, "Warning", "Please select a game mode before starting the game."
-            )
+            QMessageBox.warning(self, "Warning", "Please select a game mode before starting the game.")
             return
 
         board = GomokuBoard()  # TODO: Initialize the board
@@ -174,7 +156,6 @@ class GomokuGUI(QWidget):
     def show_result(self, result):
         # TODO: Implement result display logic
         pass
-
 
 # ======================
 # App Entry Point

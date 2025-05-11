@@ -3,6 +3,7 @@ from GomokuPlayer import GomokuPlayer
 from structure import Player
 from MinimaxAIPlayer import MiniMaxAIPlayer
 from AlphaBetaAIPlayer import AlphaBetaAIPlayer
+from MohamedAI import MohamedAIPlayer
 import time
 
 
@@ -28,7 +29,7 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
         averages[current_player_idx] += elapsed_time
         maxes[current_player_idx] = max(maxes[current_player_idx], elapsed_time)
         mins[current_player_idx] = min(mins[current_player_idx], elapsed_time)
-        if not board.update_board(i):
+        if not board.update_board(i,True):
             print(f"Invalid move {i} from Player {current_player_idx + 1}")
             return
 
@@ -76,7 +77,7 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
 
 
 board = GomokuBoard()
-player1 = MiniMaxAIPlayer(board)
-player2 = MiniMaxAIPlayer(board)
+player1 = AlphaBetaAIPlayer(board)
+player2 = AlphaBetaAIPlayer(board)
 
 test(player1, player2, board)

@@ -42,3 +42,4 @@ class GameEngine:
 board = GomokuBoard()
 player1 = AlphaBetaAIPlayer(board)
 player2 = AlphaBetaAIPlayer(board)
+
