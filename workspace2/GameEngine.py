@@ -39,9 +39,9 @@ class GameEngine:
             print("It's a draw!")
 
 
-board = GomokuBoard()
-player1 = AlphaBetaAIPlayer(board)
-player2 = AlphaBetaAIPlayer(board)
+board = GomokuBoard(readBoardInput=True)
+player1 = GomokuPlayer()
+player2 = GomokuPlayer()
 
 engine = GameEngine(player1, player2, board)
 engine.run()

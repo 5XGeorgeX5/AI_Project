@@ -183,44 +183,40 @@ class GomokuBoard:
     def moves(self) -> int:
         return self.n_moves
 
-    def update_board(self, i) -> bool:
-        if 0 <= i < 225 and self.board[i] == TileType.EMPTY:
-            oldScores = self.getTileScores(i)
-            self.__scores[0] -= oldScores[0]
-            self.__scores[1] -= oldScores[1]
+    def is_valid_move(self, i: int) -> bool:
+        return 0 <= i < 225 and self.board[i] == TileType.EMPTY
 
-            self.board[i] = TileType.BLACK if self.n_moves % 2 == 0 else TileType.WHITE
-            self.n_moves += 1
-            row, col = divmod(i, 15)
+    def update_board(self, i) -> None:
+        oldScores = self.getTileScores(i)
+        self.__scores[0] -= oldScores[0]
+        self.__scores[1] -= oldScores[1]
 
-            self.corners[0] = min(self.corners[0], row - 1 if row > 0 else 0)
-            self.corners[1] = min(self.corners[1], col - 1 if col > 0 else 0)
-            self.corners[2] = max(self.corners[2], row + 1 if row < 14 else 14)
-            self.corners[3] = max(self.corners[3], col + 1 if col < 14 else 14)
+        self.board[i] = TileType.BLACK if self.n_moves % 2 == 0 else TileType.WHITE
+        self.n_moves += 1
+        self.__lastMove = i
+        newScores = self.getTileScores(i)
+        self.__scores[0] += newScores[0]
+        self.__scores[1] += newScores[1]
 
-            self.__lastMove = i
+        row, col = divmod(i, 15)
 
-            newScores = self.getTileScores(i)
-            self.__scores[0] += newScores[0]
-            self.__scores[1] += newScores[1]
-            return True
-        return False
+        self.corners[0] = min(self.corners[0], row - 2 if row > 1 else 0)
+        self.corners[1] = min(self.corners[1], col - 2 if col > 1 else 0)
+        self.corners[2] = max(self.corners[2], row + 2 if row < 13 else 14)
+        self.corners[3] = max(self.corners[3], col + 2 if col < 13 else 14)
 
     def reset(self, i: int) -> None:
-        if 0 <= i < 225 and self.board[i] != TileType.EMPTY:
-            oldScores = self.getTileScores(i)
-            self.__scores[0] -= oldScores[0]
-            self.__scores[1] -= oldScores[1]
+        oldScores = self.getTileScores(i)
+        self.__scores[0] -= oldScores[0]
+        self.__scores[1] -= oldScores[1]
 
-            self.board[i] = TileType.EMPTY
-            self.n_moves -= 1
-            self.__lastMove = None
+        self.board[i] = TileType.EMPTY
+        self.n_moves -= 1
+        self.__lastMove = None
 
-            newScores = self.getTileScores(i)
-            self.__scores[0] += newScores[0]
-            self.__scores[1] += newScores[1]
-        else:
-            raise ValueError("Invalid position to reset.")
+        newScores = self.getTileScores(i)
+        self.__scores[0] += newScores[0]
+        self.__scores[1] += newScores[1]
 
     def display_board(self) -> None:
         printableBoard = [
@@ -250,7 +246,7 @@ class GomokuBoard:
         for i in range(15):
             for j in range(15):
                 if self.board[i * 15 + j] != TileType.EMPTY:
-                    self.corners[0] = min(self.corners[0], i - 1 if i > 0 else 0)
-                    self.corners[1] = min(self.corners[1], j - 1 if j > 0 else 0)
-                    self.corners[2] = max(self.corners[2], i + 1 if i < 14 else 14)
-                    self.corners[3] = max(self.corners[3], j + 1 if j < 14 else 14)
+                    self.corners[0] = min(self.corners[0], i - 2 if i > 1 else 0)
+                    self.corners[1] = min(self.corners[1], j - 2 if j > 1 else 0)
+                    self.corners[2] = max(self.corners[2], i + 2 if i < 13 else 14)
+                    self.corners[3] = max(self.corners[3], j + 2 if j < 13 else 14)

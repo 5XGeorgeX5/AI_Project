@@ -76,7 +76,7 @@ def test(player1: Player, player2: Player, board: GomokuBoard):
 
 
 board = GomokuBoard(readBoardInput=False)
-player1 = AlphaBetaAIPlayer(board)
-player2 = MiniMaxAIPlayer(board)
+player1 = AlphaBetaAIPlayer(board, 3)
+player2 = AlphaBetaAIPlayer(board, 3)
 
 test(player1, player2, board)
