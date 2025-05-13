@@ -1,3 +1,6 @@
+import sys
+
+
 class TileType:
     EMPTY = 0
     BLACK = 7
@@ -40,22 +43,22 @@ class GomokuBoard:
                             matrix.append(TileType.EMPTY)
                         else:
                             print("file input.txt contains an invalid input")
-                            exit(1)
+                            sys.exit(1)
         except IOError:
             print("Error opening the file input.txt!")
-            exit(1)
+            sys.exit(1)
 
         if x_count - o_count > 1 or o_count > x_count:
             print("file input.txt contains an invalid input")
-            exit(1)
+            sys.exit(1)
         if len(matrix) != 225:  # 15 x 15
             print("file input.txt contains an invalid input")
-            exit(1)
+            sys.exit(1)
         self.board = matrix
         self.n_moves = x_count + o_count
         if self.n_moves == 225:
             print("Input can't be a finished game")
-            exit(1)
+            sys.exit(1)
         self.initalizeHeuristic()
         self.initalizeCorners()
 
@@ -176,7 +179,7 @@ class GomokuBoard:
                 whiteScore += count**count
             if count == 5:
                 print("Input can't be a finished game: 5 in a row detected.")
-                exit(1)
+                sys.exit(1)
         self.__scores[0] = blackScore
         self.__scores[1] = whiteScore
 
