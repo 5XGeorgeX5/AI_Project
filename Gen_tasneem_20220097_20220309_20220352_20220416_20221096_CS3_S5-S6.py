@@ -249,6 +249,16 @@ class GomokuBoard:
             row = " ".join(printableBoard[(i - 1) * 15 : (i) * 15])
             print(row)
 
+    def save_board(self) -> None:
+        printableBoard = [
+            "-" if i == TileType.EMPTY else "X" if i == TileType.BLACK else "O"
+            for i in self.board
+        ]
+        with open("input.txt", "w") as file:
+            for i in range(15):
+                row = " ".join(printableBoard[i * 15 : (i + 1) * 15])
+                file.write(f"{row}\n")
+
     def reset_board(self):
         self.board = [TileType.EMPTY] * 225
         self.corners = [50000, 50000, -50000, -50000]
@@ -634,6 +644,10 @@ class GameWindow(QWidget):
         self.back_button = QPushButton("Back", self)
         self.back_button.setGeometry(150, 660, 120, 30)
         self.back_button.clicked.connect(self.back_to_menu)
+
+        self.save_board_button = QPushButton("Save Board", self)
+        self.save_board_button.setGeometry(280, 660, 120, 30)
+        self.save_board_button.clicked.connect(self.board.save_board)
 
         # AI move timer
         if isinstance(self.players[self.current_player_idx], BaseAIPlayer):
