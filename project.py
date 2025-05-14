@@ -511,6 +511,42 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
         return index
 
 
+########### FOR RUNNING IN TERMINAL ###########
+###############################################
+class GameEngine:
+    def __init__(self, player1: Player, player2: Player, board: GomokuBoard):
+        self.board = board
+        self.players = (player1, player2)
+        self.current_player_idx = board.moves() % 2
+
+    def run(self):
+        while not self.board.game_is_over():
+            current_player = self.players[self.current_player_idx]
+            self.board.display_board()
+            print(f"Player {self.current_player_idx + 1}'s turn")
+
+            while True:
+                i = current_player.get_move()
+                if self.board.is_valid_move(i):
+                    break
+                else:
+                    print("Invalid move: Position already taken. Try again.")
+
+            self.board.update_board(i)
+
+            if self.board.is_win():
+                self.board.display_board()
+                print(f"Player {self.current_player_idx + 1} wins!")
+                return
+
+            self.current_player_idx = 1 - self.current_player_idx
+
+        self.board.display_board()
+        print("It's a draw!")
+
+
+###############################################
+###############################################
 # ======================
 # Visual Board Widget
 # ======================
