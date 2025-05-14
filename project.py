@@ -1,4 +1,16 @@
 import sys
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QPainter, QBrush
+from PyQt5.QtWidgets import (
+    QApplication,
+    QWidget,
+    QPushButton,
+    QVBoxLayout,
+    QLabel,
+    QMessageBox,
+    QCheckBox,
+    QComboBox,
+)
 
 
 class TileType:
@@ -262,12 +274,16 @@ class GomokuBoard:
 
 
 class Player:
+    def __init__(self, name: str = "Player"):
+        self.name = name
 
     def get_move(self) -> int:
         raise NotImplementedError
 
 
 class GomokuPlayer(Player):
+    def __init__(self):
+        self.name = "Human"
 
     def get_move(self) -> int:
         while True:
@@ -331,6 +347,7 @@ class MiniMaxAIPlayer(BaseAIPlayer):
     def __init__(self, board: GomokuBoard, depth: int = 2):
         super().__init__(board)
         self.__depth = depth
+        self.name = "MiniMax"
 
     def minimax(self, maximizingPlayer: bool, depth: int) -> int:
         self.runs += 1
@@ -380,7 +397,6 @@ class MiniMaxAIPlayer(BaseAIPlayer):
 
         moves = self.valideMoves()
 
-        result = 0
         if self.__isBlack:
             maxEval = -500000000
             for _, move in moves:
@@ -391,7 +407,6 @@ class MiniMaxAIPlayer(BaseAIPlayer):
                 if value > maxEval:
                     index = move
                     maxEval = value
-                    result = value
         else:
             minEval = 500000000
             for _, move in moves:
@@ -402,10 +417,6 @@ class MiniMaxAIPlayer(BaseAIPlayer):
                 if value < minEval:
                     index = move
                     minEval = value
-                    result = value
-        print(
-            f"{(index // 15 + 1, index % 15 + 1)}: {result}, moves: {self.board.moves() + 1}"
-        )
         return index
 
 
@@ -416,6 +427,7 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
     def __init__(self, board: GomokuBoard, depth: int = 2):
         super().__init__(board)
         self.__depth = depth
+        self.name = "AlphaBeta"
 
     def minimax(self, maximizingPlayer: bool, depth: int, alpha: int, beta: int) -> int:
         self.runs += 1
@@ -474,7 +486,6 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
 
         moves = self.valideMoves()
 
-        result = 0
         if self.__isBlack:
             maxEval = -500000000
             for _, move in moves:
@@ -485,7 +496,6 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
                 if value > maxEval:
                     index = move
                     maxEval = value
-                    result = value
                     alpha = value
         else:
             minEval = 500000000
@@ -497,49 +507,230 @@ class AlphaBetaAIPlayer(BaseAIPlayer):
                 if value < minEval:
                     index = move
                     minEval = value
-                    result = value
                     beta = value
-        print(
-            f"{(index // 15 + 1, index % 15 + 1)}: {result}, moves: {self.board.moves() + 1}"
-        )
         return index
 
 
-class GameEngine:
-    def __init__(self, player1: Player, player2: Player, board: GomokuBoard):
+# ======================
+# Visual Board Widget
+# ======================
+class GomokuGUI(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Gomoku - Choose Game Mode")
+        self.setFixedSize(600, 250)
+
+        layout = QVBoxLayout()
+
+        self.label1 = QLabel("Select Player 1 (Black):", self)
+        self.combo1 = QComboBox(self)
+        self.combo1.addItems(["Human", "MiniMax", "AlphaBeta"])
+
+        self.label2 = QLabel("Select Player 2 (White):", self)
+        self.combo2 = QComboBox(self)
+        self.combo2.addItems(["Human", "MiniMax", "AlphaBeta"])
+
+        self.read_board_input = QCheckBox("Read board from input.txt file", self)
+        self.read_board_input.setChecked(False)
+
+        # Start button
+        self.start_button = QPushButton("Start Game", self)
+        self.start_button.clicked.connect(self.start_game)
+
+        layout.addWidget(self.label1)
+        layout.addWidget(self.combo1)
+        layout.addWidget(self.label2)
+        layout.addWidget(self.combo2)
+        layout.addWidget(self.read_board_input)
+        layout.addWidget(self.start_button)
+
+        self.setLayout(layout)
+
+    def start_game(self):
+        self.board = GomokuBoard(readBoardInput=self.read_board_input.isChecked())
+        player1_type = self.combo1.currentText()
+        player2_type = self.combo2.currentText()
+
+        def create_player(playerType: str) -> Player:
+            if playerType == "Human":
+                return GomokuPlayer()
+            elif playerType == "MiniMax":
+                return MiniMaxAIPlayer(self.board, depth=2)
+            elif playerType == "AlphaBeta":
+                return AlphaBetaAIPlayer(self.board, depth=3)
+
+        player1 = create_player(player1_type)
+        player2 = create_player(player2_type)
+
+        self.game_window = GameWindow(player1, player2, self.board, self)
+        self.game_window.show()
+        self.hide()
+
+
+class GameWindow(QWidget):
+    def __init__(
+        self, player1: Player, player2: Player, board: GomokuBoard, parent: GomokuGUI
+    ):
+        super().__init__()
         self.board = board
         self.players = (player1, player2)
-        self.current_player_idx = board.moves() % 2
+        self.setWindowTitle("Gomoku Game")
+        self.setFixedSize(640, 700)
+        self.cell_size = 40
+        self.margin = 20
+        self.current_player_idx = self.board.moves() % 2
+        self.delay = 100
+        self.setStyleSheet("background-color: #deb887;")
+        self.menu = parent
 
-    def run(self):
-        while not self.board.game_is_over():
-            current_player = self.players[self.current_player_idx]
-            self.board.display_board()
-            print(f"Player {self.current_player_idx + 1}'s turn")
+        # Status label
+        self.status_label = QLabel(
+            f"Player {self.current_player_idx + 1}'s Turn: {self.players[self.current_player_idx].name}",
+            self,
+        )
+        self.status_label.setGeometry(20, 625, 600, 30)
 
-            while True:
-                i = current_player.get_move()
-                if self.board.is_valid_move(i):
-                    break
-                else:
-                    print("Invalid move: Position already taken. Try again.")
+        # Reset Button
+        self.reset_button = QPushButton("Reset Game", self)
+        self.reset_button.setGeometry(20, 660, 120, 30)
+        self.reset_button.clicked.connect(self.reset_game)
 
-            self.board.update_board(i)
+        self.back_button = QPushButton("Back", self)
+        self.back_button.setGeometry(150, 660, 120, 30)
+        self.back_button.clicked.connect(self.back_to_menu)
 
-            if self.board.is_win():
-                self.board.display_board()
-                print(f"Player {self.current_player_idx + 1} wins!")
-                return
+        # AI move timer
+        if isinstance(self.players[self.current_player_idx], BaseAIPlayer):
+            QTimer.singleShot(self.delay, self.make_ai_move)
 
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        self.draw_board(painter)
+        self.draw_pieces(painter)
+
+    def draw_board(self, painter):
+        painter.setPen(Qt.black)
+        for row in range(16):
+            painter.drawLine(
+                self.margin,
+                self.margin + row * self.cell_size,
+                self.margin + 15 * self.cell_size,
+                self.margin + row * self.cell_size,
+            )
+        for col in range(16):
+            painter.drawLine(
+                self.margin + col * self.cell_size,
+                self.margin,
+                self.margin + col * self.cell_size,
+                self.margin + 15 * self.cell_size,
+            )
+
+    def draw_pieces(self, painter):
+        for i in range(225):
+            row, col = divmod(i, 15)
+            x = self.margin + col * self.cell_size
+            y = self.margin + row * self.cell_size
+            if self.board.board[i] == TileType.BLACK:
+                painter.setBrush(QBrush(Qt.black, Qt.SolidPattern))
+                painter.drawEllipse(
+                    x + 5, y + 5, self.cell_size - 10, self.cell_size - 10
+                )
+            elif self.board.board[i] == TileType.WHITE:
+                painter.setPen(Qt.black)
+                painter.setBrush(Qt.white)
+                painter.drawEllipse(
+                    x + 5, y + 5, self.cell_size - 10, self.cell_size - 10
+                )
+
+    def mousePressEvent(self, event):
+        if self.board.game_is_over():
+            return
+
+        current_player = self.players[self.current_player_idx]
+        if isinstance(current_player, GomokuPlayer):  # Human player
+            x = event.x() - self.margin
+            y = event.y() - self.margin
+            if 0 <= x < 15 * self.cell_size and 0 <= y < 15 * self.cell_size:
+                col = x // self.cell_size
+                row = y // self.cell_size
+                index = row * 15 + col
+                self.handle_human_move(index)
+
+    def handle_human_move(self, index):
+        if not self.board.is_valid_move(index):
+            return
+        self.board.update_board(index)
+        self.update()
+        self.check_game_status()
+
+        if not self.board.game_is_over():
             self.current_player_idx = 1 - self.current_player_idx
+            self.status_label.setText(
+                f"Player {self.current_player_idx + 1}'s Turn: {self.players[self.current_player_idx].name}"
+            )
+            if isinstance(self.players[self.current_player_idx], BaseAIPlayer):
+                QTimer.singleShot(self.delay, self.make_ai_move)
 
-        self.board.display_board()
-        print("It's a draw!")
+    def make_ai_move(self):
+        ai_player = self.players[self.current_player_idx]
+        move = ai_player.get_move()
+        self.board.update_board(move)
+        self.update()
+        self.check_game_status()
+
+        if not self.board.game_is_over():
+            self.current_player_idx = 1 - self.current_player_idx
+            self.status_label.setText(
+                f"Player {self.current_player_idx + 1}'s Turn: {self.players[self.current_player_idx].name}"
+            )
+            if isinstance(self.players[self.current_player_idx], BaseAIPlayer):
+                QTimer.singleShot(self.delay, self.make_ai_move)
+
+    def check_game_status(self):
+        if self.board.is_win():
+            winner = self.current_player_idx + 1
+            QMessageBox.information(self, "Game Over", f"Player {winner} wins!")
+        elif self.board.is_draw():
+            QMessageBox.information(self, "Game Over", "It's a draw!")
+
+    def reset_game(self):
+        self.board.reset_board()
+        self.current_player_idx = self.board.moves() % 2
+        self.status_label.setText(
+            f"Player {self.current_player_idx + 1}'s Turn: {self.players[self.current_player_idx].name}"
+        )
+        self.update()
+        if isinstance(self.players[self.current_player_idx], BaseAIPlayer):
+            QTimer.singleShot(self.delay, self.make_ai_move)
+
+    def back_to_menu(self):
+        self.menu.show()
+        self.close()
 
 
-board = GomokuBoard(readBoardInput=False)
-player1 = AlphaBetaAIPlayer(board, 2)
-player2 = AlphaBetaAIPlayer(board, 3)
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    gui = GomokuGUI()
+    gui.show()
+    sys.exit(app.exec_())
 
-engine = GameEngine(player1, player2, board)
-engine.run()
+
+"""
+the input file input.txt should be in the same directory as this file
+the input file should contain the board in the following format:
+- - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - -
+- - - - - - X - - - - - - - -
+- - - - - O O X - - - - - - -
+- - - X X O O O X - - - - - -
+- - - X X X O X - O - - - - -
+- - - - - - X - - - - - - - -
+- - - - - O - O - - - - - - -
+- - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - -
+"""
